@@ -85,18 +85,9 @@ function! s:command_maker.fn(jobinfo) dict abort
     " Return a cleaned up copy of self.
     let maker = filter(deepcopy(self), "v:key !~# '^__' && v:key !=# 'fn'")
 
-    let command = self.__command
-    if type(command) == type('')
-        let argv = split(&shell) + split(&shellcmdflag)
-        let maker.exe = argv[0]
-        let maker.args = argv[1:] + [command]
-    else
-        let maker.exe = command[0]
-        let maker.args = command[1:]
-    endif
     let fname = self._get_fname_for_args(a:jobinfo)
     if !empty(fname)
-        if type(command) == type('')
+        if type(maker.args) == type('')
             let maker.args[-1] .= ' '.fname
         else
             call add(maker.args, fname)
@@ -117,6 +108,14 @@ endfunction
 function! neomake#utils#MakerFromCommand(command) abort
     let maker = copy(s:command_maker)
     let maker.__command = a:command
+    if type(a:command) == type('')
+        let argv = split(&shell) + split(&shellcmdflag)
+        let maker.exe = argv[0]
+        let maker.args = argv[1:] + [a:command]
+    else
+        let maker.exe = a:command[0]
+        let maker.args = a:command[1:]
+    endif
     return maker
 endfunction
 
