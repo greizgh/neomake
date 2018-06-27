@@ -410,6 +410,7 @@ Execute (neomake#utils#MakerFromCommand appends args for file_mode (string)):
   AssertEqual maker.fn(jobinfo), {
   \ '_get_argv': get(maker, '_get_argv'),
   \ '_get_fname_for_args': get(maker, '_get_fname_for_args'),
+  \ '_wrapped_in_shell': 1,
   \ 'args': shell_argv[1:] + ['echo "%" 1'],
   \ 'exe': shell_argv[0],
   \ 'remove_invalid_entries': 0}
@@ -445,6 +446,7 @@ Execute (neomake#utils#MakerFromCommand appends args for file_mode (list)):
   AssertEqual maker.fn(jobinfo), {
   \ '_get_argv': get(maker, '_get_argv'),
   \ '_get_fname_for_args': get(maker, '_get_fname_for_args'),
+  \ '_wrapped_in_shell': 0,
   \ 'args': ['%', '1'],
   \ 'exe': 'echo',
   \ 'remove_invalid_entries': 0}
