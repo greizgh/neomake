@@ -88,9 +88,13 @@ function! s:command_maker.fn(jobinfo) dict abort
     let fname = self._get_fname_for_args(a:jobinfo)
     if !empty(fname)
         if type(maker.args) == type('')
-            let maker.args[-1] .= ' '.fname
+            let maker.args .= ' '.fname
         else
-            call add(maker.args, fname)
+            if maker._wrapped_in_shell
+                let maker.args[-1] .= ' '.fname
+            else
+                call add(maker.args, fname)
+            endif
         endif
     endif
     return maker
@@ -112,9 +116,11 @@ function! neomake#utils#MakerFromCommand(command) abort
         let argv = split(&shell) + split(&shellcmdflag)
         let maker.exe = argv[0]
         let maker.args = argv[1:] + [a:command]
+        let maker._wrapped_in_shell = 1
     else
         let maker.exe = a:command[0]
         let maker.args = a:command[1:]
+        let maker._wrapped_in_shell = 0
     endif
     return maker
 endfunction
