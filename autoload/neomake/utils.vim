@@ -105,11 +105,9 @@ function! s:command_maker.fn(jobinfo) dict abort
     return maker
 endfunction
 
-" @vimlint(EVL103, 1, a:jobinfo)
-function! s:command_maker._get_exe_and_args(jobinfo) abort dict
+function! s:command_maker._get_exe_and_args(_jobinfo) abort dict
     return [self.exe, self.args]
 endfunction
-" @vimlint(EVL103, 0, a:jobinfo)
 
 " Create a maker object, with a "fn" callback.
 " Args: command (string or list).  Gets wrapped in a shell in case it is a

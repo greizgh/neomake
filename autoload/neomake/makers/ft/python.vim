@@ -117,15 +117,13 @@ function! neomake#makers#ft#python#flake8() abort
         \ 'output_stream': 'stdout',
         \ }
 
-    " @vimlint(EVL103, 1, a:jobinfo)
-    function! maker.supports_stdin(jobinfo) abort
+    function! maker.supports_stdin(_jobinfo) abort
         let self.args += ['--stdin-display-name', '%:.']
         if !has_key(self, 'cwd')
             let self.cwd = expand('%:h')
         endif
         return 1
     endfunction
-    " @vimlint(EVL103, 0, a:jobinfo)
     return maker
 endfunction
 

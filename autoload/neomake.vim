@@ -1256,7 +1256,7 @@ function! s:Make(options) abort
     " Cancel any already running jobs for the makers from these jobs.
     if !empty(s:jobs)
         " @vimlint(EVL102, 1, l:job)
-        for job in jobs
+        for _ in jobs
             let running_already = values(filter(copy(s:jobs),
                         \ 'v:val.maker == job.maker'
                         \ .' && v:val.bufnr == job.bufnr'
@@ -2082,9 +2082,11 @@ function! s:ProcessJobOutput(jobinfo, lines, source, ...) abort
         if has_key(maker, 'mapexpr')
             let l:neomake_bufname = bufname(a:jobinfo.bufnr)
             " @vimlint(EVL102, 1, l:neomake_bufdir)
+            " vint: -ProhibitUnusedVariable
             let l:neomake_bufdir = fnamemodify(neomake_bufname, ':h')
             " @vimlint(EVL102, 1, l:neomake_output_source)
             let l:neomake_output_source = a:source
+            " vint: +ProhibitUnusedVariable
             call map(a:lines, maker.mapexpr)
         endif
 
@@ -2358,8 +2360,7 @@ else
         endif
     endfunction
 
-    " @vimlint(EVL103, 1, a:timer)
-    function! s:nvim_output_handler_cb(timer) abort
+    function! s:nvim_output_handler_cb(_timer) abort
         while !empty(s:nvim_output_handler_queue)
             let args = remove(s:nvim_output_handler_queue, 0)
             let jobinfo = args[0]
@@ -2377,13 +2378,11 @@ else
         endwhile
         unlet! s:nvim_output_handler_timer
     endfunction
-    " @vimlint(EVL103, 0, a:timer)
 endif
 
 " Exit handler for buffered output with Neovim.
 " In this case the output gets stored on the jobstart-options dict.
-" @vimlint(EVL103, 1, a:event_type)
-function! s:nvim_exit_handler_buffered(job_id, data, event_type) abort
+function! s:nvim_exit_handler_buffered(job_id, data, _event_type) abort
     let jobinfo = get(s:jobs, get(s:map_job_ids, a:job_id, -1), {})
     if empty(jobinfo)
         call neomake#log#debug(printf('exit: job not found: %d.', a:job_id))
@@ -2399,10 +2398,8 @@ function! s:nvim_exit_handler_buffered(job_id, data, event_type) abort
 
     call s:exit_handler(jobinfo, a:data)
 endfunction
-" @vimlint(EVL103, 0, a:event_type)
 
-" @vimlint(EVL103, 1, a:event_type)
-function! s:nvim_exit_handler(job_id, data, event_type) abort
+function! s:nvim_exit_handler(job_id, data, _event_type) abort
     let jobinfo = get(s:jobs, get(s:map_job_ids, a:job_id, -1), {})
     if empty(jobinfo)
         call neomake#log#debug(printf('exit: job not found: %d.', a:job_id))
@@ -2410,7 +2407,6 @@ function! s:nvim_exit_handler(job_id, data, event_type) abort
     endif
     call s:exit_handler(jobinfo, a:data)
 endfunction
-" @vimlint(EVL103, 0, a:event_type)
 
 function! s:exit_handler(jobinfo, data) abort
     let jobinfo = a:jobinfo

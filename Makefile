@@ -159,7 +159,8 @@ build/vimlint: | build
 	git clone -q --depth=1 https://github.com/syngan/vim-vimlint $@
 build/vimlparser: | build
 	git clone -q --depth=1 https://github.com/ynkdir/vim-vimlparser $@
-VIMLINT_OPTIONS=-u -e EVL102.l:_=1
+# Ignore EVL103 (unused var), which is checked by vint now (ignoring _*).
+VIMLINT_OPTIONS=-u -e EVL102.l:_=1 -e EVL103=1
 vimlint: | $(firstword $(VIMLINT_BIN))
 	$(VIMLINT_BIN) $(VIMLINT_OPTIONS) $(LINT_ARGS)
 vimlint-errors: | $(firstword VIMLINT_BIN)
